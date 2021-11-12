@@ -10,25 +10,53 @@ const io = new Server(server);
 
 const PORT = 8787;
 
+const URL_PAGES = {
+  home: `${__dirname}/pages/index.html`,
+};
+
 const historyMsg = [];
-const users = [];
+let users = [
+  { id: 'mMkfaVQKrAF8jET-AAAF', userName: 'qweqwe' },
+  { id: 'mMkfaVQKrAF8jET-AAA', userName: 'weqewewqew' },
+];
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.get('/', (req, res) => {
-//   // res.sendFile(`${__dirname}/index.html`);
-//   console.log('test');
-// });
+app.get('/', (req, res) => {
+  res.sendFile(URL_PAGES.home);
+});
 
+// io
 io.on('connection', (socket) => {
-  socket.broadcast.emit('user_status', socket.connected);
+  socket.on('USER_ONLINE', (userName) => {
+    users.push({
+      id: socket.id,
+      userName,
+    });
 
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+    const statusText = `User ${userName} - connection`;
+    socket.broadcast.emit('USER_STATUS', statusText);
+
+    console.log(users);
   });
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    const newUsers = users.filter((user) => {
+      if (user.id === socket.id) {
+        const statusText = `User ${user.userName} - disconnect`;
+        socket.broadcast.emit('USER_STATUS', statusText);
+        return false;
+      } else {
+        return true;
+      }
+
+    });
+
+    users = newUsers;
+  });
+
+  socket.on('SEND_MESSAGE', (msg) => {
+    io.emit('SEND_MESSAGE', msg);
   });
 });
 
