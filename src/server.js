@@ -16,8 +16,8 @@ const URL_PAGES = {
 
 const historyMsg = [];
 let users = [
-  { id: 'mMkfaVQKrAF8jET-AAAF', userName: 'qweqwe' },
-  { id: 'mMkfaVQKrAF8jET-AAA', userName: 'weqewewqew' },
+  { id: 'mMkfaVQKrAF8', userName: 'Bot1' },
+  { id: 'mMkfaVQAA', userName: 'Bot2' },
 ];
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -53,6 +53,10 @@ io.on('connection', (socket) => {
 
     users = newUsers;
   });
+
+  socket.on('GET_ONLINE_USERS', () => {
+    socket.emit('SET_ONLINE_USERS', users.map(e => e.userName));
+  })
 
   socket.on('SEND_MESSAGE', (msg) => {
     historyMsg.push(msg);

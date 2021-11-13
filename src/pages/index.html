@@ -8,8 +8,17 @@
     <script defer src="script.js"></script>
   </head>
   <body>
+    <div class="users-list-container">
+      <p>Online:</p>
+      <div class="custom-icon-wrapper">
+        <div class="custom-icon"></div>
+        <div class="custom-icon"></div>
+        <div class="custom-icon"></div>
+      </div>
+      <ul class='user-list'></ul>
+    </div>
     <form id="block-name" action="">
-      <input autocomplete="off" placeholder="Enter name"/>
+      <input autocomplete="off" placeholder="Enter name" />
       <button>Send</button>
     </form>
 
@@ -17,7 +26,7 @@
       <ul id="messages"></ul>
       <form id="form" action="">
         <div id="nickname"></div>
-        <input id="input" autocomplete="off" placeholder="Enter text"/>
+        <input id="input" autocomplete="off" placeholder="Enter text" />
         <button>Send</button>
       </form>
     </div>

@@ -1,5 +1,8 @@
 const socket = io();
 
+const iconButton = document.querySelector('.custom-icon-wrapper');
+const userList = document.querySelector('.user-list');
+
 const blockName = document.querySelector('#block-name');
 const inputName = document.querySelector('#block-name > input');
 const sendName = document.querySelector('#block-name > button');
@@ -21,6 +24,20 @@ const createMessage = (message) => {
 
   window.scrollTo(0, document.body.scrollHeight);
 };
+
+iconButton.addEventListener('click', () => {
+  iconButton.classList.add('active');
+  userList.classList.remove('active');
+
+  socket.emit('GET_ONLINE_USERS');
+});
+userList.addEventListener('click', () => {
+  iconButton.classList.remove('active');
+
+  while (userList.firstChild) {
+    userList.removeChild(userList.firstChild);
+  }
+});
 
 // Swap screen
 blockName.addEventListener('submit', (e) => {
@@ -50,6 +67,14 @@ socket.on('USER_STATUS', (statusText) => {
 socket.on('GET_HISTORY', (history) => {
   history.forEach((e) => {
     createMessage(e);
+  });
+});
+
+socket.on('SET_ONLINE_USERS', (users) => {
+  users.forEach((el) => {
+    const item = document.createElement('li');
+    item.textContent = el;
+    userList.appendChild(item);
   });
 });
 
