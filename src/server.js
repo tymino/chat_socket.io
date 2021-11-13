@@ -34,29 +34,29 @@ io.on('connection', (socket) => {
       userName,
     });
 
-    const statusText = `User ${userName} - connection`;
-    socket.broadcast.emit('USER_STATUS', statusText);
+    socket.emit('GET_HISTORY', historyMsg);
 
-    console.log(users);
+    const statusText = `${userName} - connection`;
+    socket.broadcast.emit('USER_STATUS', statusText);
   });
 
   socket.on('disconnect', () => {
     const newUsers = users.filter((user) => {
       if (user.id === socket.id) {
-        const statusText = `User ${user.userName} - disconnect`;
+        const statusText = `${user.userName} - disconnect`;
         socket.broadcast.emit('USER_STATUS', statusText);
         return false;
       } else {
         return true;
       }
-
     });
 
     users = newUsers;
   });
 
   socket.on('SEND_MESSAGE', (msg) => {
-    io.emit('SEND_MESSAGE', msg);
+    historyMsg.push(msg);
+    socket.broadcast.emit('SEND_MESSAGE', msg);
   });
 });
 
