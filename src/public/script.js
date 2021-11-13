@@ -5,10 +5,10 @@ const inputName = document.querySelector('#block-name > input');
 const sendName = document.querySelector('#block-name > button');
 
 const blockChat = document.querySelector('#block-chat');
-const messages = document.getElementById('messages');
-const nickname = document.getElementById('nickname');
-const form = document.getElementById('form');
-const input = document.getElementById('input');
+const messages = document.querySelector('#messages');
+const nickname = document.querySelector('#nickname');
+const form = document.querySelector('#form');
+const input = document.querySelector('#input');
 
 const USER = {
   name: '',
@@ -23,7 +23,9 @@ const createMessage = (message) => {
 };
 
 // Swap screen
-sendName.addEventListener('click', (e) => {
+blockName.addEventListener('submit', (e) => {
+  e.preventDefault();
+
   if (inputName.value) {
     nickname.textContent = inputName.value;
     USER.name = inputName.value;
@@ -46,9 +48,9 @@ socket.on('USER_STATUS', (statusText) => {
 });
 
 socket.on('GET_HISTORY', (history) => {
-  history.forEach(e => {
+  history.forEach((e) => {
     createMessage(e);
-  })
+  });
 });
 
 form.addEventListener('submit', (e) => {
@@ -69,4 +71,3 @@ form.addEventListener('submit', (e) => {
 socket.on('SEND_MESSAGE', (msg) => {
   createMessage(msg);
 });
-
